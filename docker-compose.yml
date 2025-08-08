@@ -1,0 +1,35 @@
+autoupdate: true
+services:
+  postgres:
+    image: postgres:15
+    container_name: poc_postgres
+    environment:
+      POSTGRES_USER: planner
+      POSTGRES_PASSWORD: planner
+      POSTGRES_DB: erp
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+  adminer:
+    image: adminer:latest
+    container_name: poc_adminer
+    depends_on:
+      - postgres
+    ports:
+      - "8080:8080"
+
+  metabase:
+    image: metabase/metabase:latest
+    container_name: poc_metabase
+    ports:
+      - "3000:3000"
+    environment:
+      MB_PLUGIN_DIR: /plugins
+    volumes:
+      - mbdata:/metabase-data
+
+volumes:
+  pgdata:
+  mbdata:
